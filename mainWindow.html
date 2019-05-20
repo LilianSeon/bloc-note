@@ -1,96 +1,144 @@
 <!DOCTYPE html>
-<html lang="fr" id="html">
-<head>
-	<title>Bloc - Note</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-</head>
-<body class="container" id="body">
+<html lang="fr">
+  <head>
+    <title>Design</title>
+    <meta charset="utf-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body class="grey lighten-4">
+    <!-- MENU -->
+    <header>
+        <nav class="white top-nav">
+            <div class="container">
+                <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s12 m12 offset-m1">
+                        <div class="input-field col m5 offset-m1 recherche">
+                            <input id="recherche" type="text" placeholder="Recherche" class="valide z-depth-3">
+                        </div>
+                        <div class="col m3">
+                            <div class="flow-text black-text prenom center-align">Nom Prénom</div>
+                        </div>
+                        <div class="col m1">
+                            <a href="#user"><img class="circle photo-profil right" src="https://materializecss.com/images/yuna.jpg"></a>
+                        </div>
+                        <div class="col m1">
+                            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text center-align">menu</i></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </nav>
+    <ul id="slide-out" class="sidenav sidenav-fixed">
+    <li class="noHover">
+        <div class="user-view menu-img">
+            <div class="background">
+                <img class="logo-menu" src="img/logo.png">
+            </div>
+        </div>
+    </li>
+    <hr>
+    <li class="activeMenu liMenu"><a href="#!"><i class="material-icons">event_note</i>Note</a></li>
+    <li class="liMenu"><a href="#!"><i class="material-icons">group</i>Groupe</a></li>
+    </ul>
+    </header>
+    <!-- End Menu -->
+    <div class="container">
+        <!-- First row -->
+        <div class="row" style="margin-top:20px;"> 
+            <div class="col m4 offset-m2" style="margin-top:15px;">
+                <a href="#modal1" class="waves-effect waves-light btn blue z-depth-2 modal-trigger"><i class="material-icons left">add</i>Ajoutez un note</a>
+            </div>
+            <div class="input-field col m3 offset-m3">
+                <select>
+                    <option value="all" selected>Tous les groupe</option>
+                    <option value="famille">Famille</option>
+                    <option value="travail">Travail</option>
+                </select>
+                <label>Affichage de</label>
+            </div>
+        </div>
+        <!-- End First row-->
+        <div class="row">
+            <div class="col s12 m5 offset-m2">
+            <div class="card white z-depth-3">
+                <div class="card-content black-text">
+                    <span class="right iconNote"><i class="material-icons black-text center-align">close</i></span>
+                    <span class="right iconNote"><i class="material-icons black-text center-align">border_color</i></span>
+                    <span class="right iconNote"><i class="material-icons black-text center-align">volume_up</i></span>
+                    <span class="card-title titre">Card Title 1</span>
+                    <p>I am a very simple card. I am good at containing small bits of information.
+                    I am convenient because I require little markup to use effectively.</p>
+                </div>
+                <div class="card-action">
+                    <small>De : Bernard</small>
+                    <small class="right">Le : 25/10/2019</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12 m5">
+            <div class="card white z-depth-3">
+                <div class="card-content black-text">
+                    <span class="right iconNote"><i class="material-icons black-text center-align">close</i></span>
+                    <span class="right iconNote"><i class="material-icons black-text center-align">border_color</i></span>
+                    <span class="right iconNote"><i class="material-icons black-text center-align">volume_up</i></span>
+                    <span class="card-title titre">Card Title 2</span>
+                    <p>I am a very simple card. I am good at containing small bits of information.
+                    I am convenient because I require little markup to use effectively.</p>
+                </div>
+                <div class="card-action">
+                    <small>De : Mouloud</small>
+                    <small class="right">Le : 25/10/2019</small>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Modal Add Note -->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4 class="center-align">Nouvelle Note</h4>
+                <form>
+                    <div class="row">
+                        <div class="input-field col s6 m6">
+                            <input id="title" type="text" class="validate">
+                            <label for="title">Titre</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s11 m11">
+                            <textarea id="message" class="materialize-textarea"></textarea>
+                            <label for="message">Message...</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
+            </div>
+            </div>
+        <!-- End modal add note -->
 
 
-	<!-- MENU -->
-	<nav>
-		<ul>
-			<li id="menu0">
-				<div>
-					<img src="img/logo.png" width="40" height="40" style="zoom:120%;">
-				</div>
-			</li>
-			<li id="menu1">
-				<div>
-					<img src="img/loupeWhite.png" width="35" height="35">
-				</div>
-			</li>
-			<li id="menu2">
-				<div>
-					<img src="img/plusWhite.png" width="35" height="35">
-				</div>
-			</li>
-			<li id="menu3">
-				<div>
-					<img src="img/profilWhite.png" width="40" height="40">
-				</div>
-			</li>
-			<li id="menu4">
-				<div>
-					<img src="img/poweroffWhite.png" width="35" height="35">
-				</div>
-			</li>
-		</ul>
-	</nav>
-	<!-- FIN MENU -->
-
-
-
-	<h1 class="title">Bloc - Note</h1>
-	<hr>
-	<br>
-	<div id="recherche" class="recherche">
-		<div class="container-1">
-			<span class="icon"><i class="fa fa-search"></i></span>
-			<input onkeyup="search()" type="search" id="search" placeholder="Rechercher une note..." autofocus>
-		</div>
-	</div>
-	<div id="note"><!-- Note --></div>
-	<div id="myModal" class="modal"> <!-- Note creation Modal -->
-		<div class="modal-content">
-			<span class="close">&times;</span>
-			<h1 class="titleNote"> Nouvelle Note
-			</h1>
-			<div style="display: inline;">
-				<input id="title" name="title" type="text" required autofocus>
-				<label class="container" for="title"><b>Titre</b></label><br>
-				<textarea id="message" name="message" placeholder="Message..." onkeydown="characteresCount(100)" required></textarea>
-				<button id="ajoutez">Ajoutez</button>
-					<span id="over"></span>
-					<div class="restriction">
-					<span class="circle">
-						<svg height="20" width="20">
-							<circle id="circle1" class="RadialCounter-progressUnderlay" cx="50%" cy="50%" r="8" fill="none" stroke-width="1"></circle>
-							<circle id="circle2" class="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r="8" fill="none" stroke-width="2" style="stroke-dashoffset: 50;stroke-dasharray: 50.2655;"></circle>
-						</svg>
-					</span>
-					<div id="errorCharacteres" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="myModalRemove" class="modal" style="display:none;">
-		<div class="close">&times;</div>
-		<div class="modal-content">
-			<p class="textRemove">
-				Êtes-vous sûr de vouloir supprimer cette note ?
-			</p>
-			<div id="btnRemove" class="btnRemove"></div>
-		</div>
-	</div>
-	<div id="snackbar1">Une note vient d'être ajouté.</div>
-	<div id="snackbar2">Modifiez une note à la fois &#9888;</div>
-	<div id="snackbar3">Modification enregistré &#10004;</div>
-	<div id="snackbar5">La note a été supprimé &#10004;</div>
-	<div id="save" class="save" style="display:none;">
-		<button id="saveButton">Sauvegarder</button>
-	</div>
-<script type="text/javascript" src="js/mainWindow.js"></script>
-</body>
+        </div>
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('.sidenav').sidenav();
+        $('select').formSelect();
+        $('.modal').modal();
+    });
+    </script>
+  </body>
 </html>
