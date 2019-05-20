@@ -1,0 +1,55 @@
+.logo-menu{
+    margin-left:80px;
+    margin-top:-4px;
+    width: 130px;
+    height: 130px;
+}
+.menu-img{
+    height: 130px;
+}
+.noHover:hover{
+    background-color: transparent !important;
+}
+hr{
+    margin-top:0px;
+}
+.photo-profil{
+    width: 55px;
+    height: 55px;
+    margin-top:4px;
+}
+#recherche{
+    border-bottom: solid 1px #26a69a;
+}
+.prenom{
+    margin-top:6px;
+}
+nav .input-field label{
+    top:-3px;
+}
+::placeholder{
+    color:#212121 !important;
+}
+.titre{
+    border-bottom: 1px solid black;
+    padding-bottom:5px;
+}
+.activeMenu{
+    background-color: #42a5f5 !important;
+}
+.liMenu:hover{
+    background-color: #bbdefb  !important;
+}
+.iconNote{
+    display: none;
+    margin-right:7px;
+}
+.iconNote:hover{
+    cursor: pointer;
+}
+.card:hover{
+    cursor: grab;
+}
+.card:hover .iconNote{
+    display: block;
+}

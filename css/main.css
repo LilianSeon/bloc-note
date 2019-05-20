@@ -5,6 +5,24 @@
 @keyframes fading {0%{opacity:0}50%{opacity:50%}100%{opacity:1;}} /* Fading */
 @keyframes rotating {from{transform: rotate(0deg);}to{transform: rotate(360deg);}} /* Rotation */
 
+/* Login page */
+
+.login-title {
+    text-align: center;
+    width: 400px;
+    margin: 50px auto 0;
+}
+
+.login-container {
+    width: 400px;
+    margin: auto;
+    text-align: center;
+}
+
+.login-inscription {
+    margin-top: 30px;
+}
+
 /* Search Bar */
 
 .recherche{
