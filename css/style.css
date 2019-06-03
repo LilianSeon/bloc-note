@@ -47,9 +47,47 @@ nav .input-field label{
 .iconNote:hover{
     cursor: pointer;
 }
+.pointer:hover{
+    cursor: pointer;
+}
 .card:hover{
     cursor: grab;
 }
 .card:hover .iconNote{
     display: block;
+}
+
+
+svg.RadialCounter {
+    margin-bottom: -4px;
+    overflow: visible;
+    transform: rotate(-90deg);
+}
+    
+.RadialCounter--safe {
+    stroke: #1da1f2;
+}
+
+.RadialCounter--warn {
+    stroke: #ffad1f;
+}
+
+.RadialCounter--danger {
+    stroke: #e0245e;
+}
+
+.RadialCounter-progressUnderlay {
+    stroke: #becad3;
+}
+
+@keyframes RadialCounterPulse {
+    0% { stroke-width:2 }
+    50% { stroke-width: 3.5; }
+    100% { stroke-width: 2; }
+}
+
+.RadialCounter--danger.RadialCounter--pulse,
+.RadialCounter--warn.RadialCounter--pulse {
+    animation: RadialCounterPulse 0.3s ease-in-out;
+    animation-iteration-count: 1;
 }

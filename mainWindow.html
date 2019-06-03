@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col s12 m12 offset-m1">
                         <div class="input-field col m5 offset-m1 recherche">
-                            <input id="recherche" type="text" placeholder="Recherche" class="valide z-depth-3">
+                            <input id="recherche" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
                         </div>
                         <div class="col m3">
                             <div class="flow-text black-text prenom center-align">Nom Prénom</div>
@@ -41,7 +41,7 @@
     <li class="noHover">
         <div class="user-view menu-img">
             <div class="background">
-                <img class="logo-menu" src="img/logo.png">
+                <img id="logo" class="logo-menu" src="img/logo.png">
             </div>
         </div>
     </li>
@@ -55,7 +55,7 @@
         <!-- First row -->
         <div class="row" style="margin-top:20px;"> 
             <div class="col m4 offset-m2" style="margin-top:15px;">
-                <a href="#modal1" class="waves-effect waves-light btn blue z-depth-2 modal-trigger"><i class="material-icons left">add</i>Ajoutez un note</a>
+                <a id="ajoutez" href="#modal1" class="waves-effect waves-light btn blue z-depth-2 modal-trigger"><i class="material-icons left">add</i>Ajoutez un note</a>
             </div>
             <div class="input-field col m3 offset-m3">
                 <select>
@@ -67,13 +67,14 @@
             </div>
         </div>
         <!-- End First row-->
+        <div id="note">
         <div class="row">
-            <div class="col s12 m5 offset-m2">
+            <div id="note1" draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m5 offset-m2">
             <div class="card white z-depth-3">
                 <div class="card-content black-text">
-                    <span class="right iconNote"><i class="material-icons black-text center-align">close</i></span>
-                    <span class="right iconNote"><i class="material-icons black-text center-align">border_color</i></span>
-                    <span class="right iconNote"><i class="material-icons black-text center-align">volume_up</i></span>
+                    <span class="right iconNote" onclick="deleteNote(noteId, false);"><i class="material-icons black-text center-align">close</i></span>
+                    <span class="right iconNote" onclick="modif(noteId);"><i class="material-icons black-text center-align">border_color</i></span>
+                    <span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span>
                     <span class="card-title titre">Card Title 1</span>
                     <p>I am a very simple card. I am good at containing small bits of information.
                     I am convenient because I require little markup to use effectively.</p>
@@ -86,11 +87,11 @@
         </div>
 
         <div class="col s12 m5">
-            <div class="card white z-depth-3">
+            <div id="note2" draggable="true" ondrag="dragstart(event,noteId);" class="card white z-depth-3">
                 <div class="card-content black-text">
-                    <span class="right iconNote"><i class="material-icons black-text center-align">close</i></span>
-                    <span class="right iconNote"><i class="material-icons black-text center-align">border_color</i></span>
-                    <span class="right iconNote"><i class="material-icons black-text center-align">volume_up</i></span>
+                    <span class="right iconNote" onclick="deleteNote(noteId, false);"><i class="material-icons black-text center-align">close</i></span>
+                    <span class="right iconNote" onclick="modif(noteId);"><i class="material-icons black-text center-align">border_color</i></span>
+                    <span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span>
                     <span class="card-title titre">Card Title 2</span>
                     <p>I am a very simple card. I am good at containing small bits of information.
                     I am convenient because I require little markup to use effectively.</p>
@@ -102,11 +103,16 @@
             </div>
         </div>
         </div>
+        </div>
 
         <!-- Modal Add Note -->
         <div id="modal1" class="modal">
             <div class="modal-content">
-                <h4 class="center-align">Nouvelle Note</h4>
+                <div class="row">
+                <h4 class="center-align">Nouvelle Note
+                    <i id="closeNewNote" class="material-icons black-text center-align right pointer">close</i>
+                </h4>
+                </div>
                 <form>
                     <div class="row">
                         <div class="input-field col s6 m6">
@@ -116,13 +122,22 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s11 m11">
-                            <textarea id="message" class="materialize-textarea"></textarea>
+                            <textarea id="message" class="materialize-textarea" onkeydown="characteresCount(100)"></textarea>
                             <label for="message">Message...</label>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
+                    <span id="over"></span>
+					<div class="restriction">
+					<span class="circle">
+						<svg height="20" width="20">
+							<circle id="circle1" class="RadialCounter-progressUnderlay" cx="50%" cy="50%" r="8" fill="none" stroke-width="1"></circle>
+							<circle id="circle2" class="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r="8" fill="none" stroke-width="2" style="stroke-dashoffset: 50;stroke-dasharray: 50.2655;"></circle>
+						</svg>
+					</span>
+					<div id="errorCharacteres" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
                 <a href="#!" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
             </div>
             </div>
@@ -132,13 +147,30 @@
         </div>
     <!-- Compiled and minified JavaScript -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-    $(document).ready(function(){
+
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+    var elems2 = document.querySelectorAll('.sidenav');
+    var instances2 = M.Sidenav.init(elems2);
+    var elems3 = document.getElementById('modal1');
+    var instances3 = M.Modal.init(elems3);
+
+    document.getElementById('closeNewNote').onclick = function() {
+        M.Modal.getInstance(elems3).close();
+    }
+  });
+
+  
+
+   /* $(document).ready(function(){
         $('.sidenav').sidenav();
         $('select').formSelect();
         $('.modal').modal();
-    });
+    });*/
     </script>
+    <script type="text/javascript" src="js/mainWindow.js"></script>
   </body>
 </html>
