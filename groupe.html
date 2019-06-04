@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Bloc-Note</title>
+    <meta charset="utf-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body class="grey lighten-4">
+    <!-- MENU -->
+    <header>
+        <nav class="white top-nav">
+            <div class="container">
+                <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s12 m12 offset-m1">
+                        <div class="input-field col m5 offset-m1 recherche">
+                            <input id="recherche" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
+                        </div>
+                        <div class="col m3">
+                            <div class="flow-text black-text prenom center-align">Nom Prénom</div>
+                        </div>
+                        <div class="col m1">
+                            <a href="#user"><img class="circle photo-profil right" src="https://materializecss.com/images/yuna.jpg"></a>
+                        </div>
+                        <div class="col m1">
+                            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text center-align">menu</i></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </nav>
+    <ul id="slide-out" class="sidenav sidenav-fixed">
+    <li class="noHover">
+        <div class="user-view menu-img">
+            <div class="background">
+                <img id="logo" class="logo-menu" src="img/logo.png">
+            </div>
+        </div>
+    </li>
+    <hr>
+    <li class="liMenu"><a href="mainWindow.html"><i class="material-icons">event_note</i>Note</a></li>
+    <li class="activeMenu liMenu"><a href="#!"><i class="material-icons">group</i>Groupe</a></li>
+    </ul>
+    </header>
+    <!-- End Menu -->
+    <div class="container">
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+    </html>
