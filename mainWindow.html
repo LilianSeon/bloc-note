@@ -23,7 +23,7 @@
                         <div class="input-field col m5 offset-m1 recherche">
                             <input id="recherche" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
                         </div>
-                        <div class="col m3">
+                        <div class="col m4">
                             <div class="flow-text black-text prenom center-align">Nom Prénom</div>
                         </div>
                         <div class="col m1">
@@ -76,7 +76,7 @@
                     <span class="right iconNote" onclick="modif(noteId);"><i class="material-icons black-text center-align">border_color</i></span>
                     <span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span>
                     <span class="card-title titre">Card Title 1</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
+                    <p>M1 I am a very simple card. I am good at containing small bits of information.
                     I am convenient because I require little markup to use effectively.</p>
                 </div>
                 <div class="card-action">
@@ -93,12 +93,12 @@
                     <span class="right iconNote" onclick="modif(noteId);"><i class="material-icons black-text center-align">border_color</i></span>
                     <span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span>
                     <span class="card-title titre">Card Title 2</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
+                    <p>M2 I am a very simple card. I am good at containing small bits of information.
                     I am convenient because I require little markup to use effectively.</p>
                 </div>
                 <div class="card-action">
                     <small>De : Mouloud</small>
-                    <small class="right">Le : 25/10/2019</small>
+                    <small class="right">Le : 26/10/2019</small>
                 </div>
             </div>
         </div>
@@ -128,18 +128,18 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                    <span id="over"></span>
-					<div class="restriction">
-					<span class="circle">
+            <div class="modal-footer row">
+                <div id="over" class="col m1"></div>
+				<div class="restriction col m11">
+					<div class="circle">
 						<svg height="20" width="20">
 							<circle id="circle1" class="RadialCounter-progressUnderlay" cx="50%" cy="50%" r="8" fill="none" stroke-width="1"></circle>
 							<circle id="circle2" class="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r="8" fill="none" stroke-width="2" style="stroke-dashoffset: 50;stroke-dasharray: 50.2655;"></circle>
 						</svg>
-					</span>
-					<div id="errorCharacteres" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
-                <a href="#!" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
-            </div>
+					</div>
+					<div id="errorCharacteres" class="left" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
+                    <a href="#!" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
+                </div>
             </div>
         <!-- End modal add note -->
 

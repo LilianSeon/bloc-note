@@ -132,12 +132,12 @@ function search(){ //Display the notes that the user is looking for
     input = document.getElementById("recherche");
     filter = input.value.toUpperCase();
     divNote = document.getElementById("note");
-    note = divNote.getElementsByTagName("div");
+    note = divNote.getElementsByClassName("card");
     for (i = 0; i < note.length; i++) {
         a = note[i];
-        txtValue = a.textContent || a.innerText;
+        txtValue = a.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            note[i].style.display = "";
+			note[i].style.display = "";
         } else {
 			if(note[i].className != "card-action"){
 				note[i].style.display = "none";
