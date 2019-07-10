@@ -7,6 +7,9 @@ const editJsonFile = require("edit-json-file");
 const updateJsonFile = require('update-json-file');
 const userHome = require('user-home');
 const ipc = require('electron').ipcRenderer;
+let $ = require('jquery');
+
+
 
 function noteCount(){ // Count the amount of note saved
 	var read = fs.readFileSync('myjsonfile.json');
@@ -17,106 +20,26 @@ function noteCount(){ // Count the amount of note saved
 	return cb.length;
 }
 
-	document.getElementById('ajoutez').addEventListener('click',function(){ // When the user fill a new note.
-		title = document.getElementById('title').value;
-		message = document.getElementById('message').value;
+	$('#ajoutez').click(function(){
+		$.ajax({
+			url: 'http://51.68.85.139:3000/note/create',
+			data: 'title='+ $('#title').val() +'&note='+ $('#message').val(),
+			type: 'post',
+			success: function(data) {
+				displayNote()
+			}
+		});
+	})
 
-		if (fs.existsSync('myjsonfile.json') == false) { // If json file doesn't exists
-			var obj = {
-   				note: [{'id': 0, 'title': title.toString(), 'message': message.toString()}]
-			};
-			var json = JSON.stringify(obj, null, 4);
-			fs.writeFile('myjsonfile.json', json, 'utf8', function(err) {
-    			if(err) return console.log(err);
-				console.log("The file was saved for the first time!");
-				document.getElementById('myModal').style.display = "none";
-				toast(1);
-				displayNote();
-			});
-		}else{
-			fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
-    			if (err){
-        			console.log(err);
-    			} else {
-					var cb1 = data.match(/"id":/g); // count the amount of note
-					cb1 = cb1.length;
-					var obj = {
-  						note: []
-					};
-					obj = JSON.parse(data);
-					obj.note.push({id: cb1, title: title, message: message});
-					obj = JSON.stringify(obj, null, 4);
-    				fs.writeFile('myjsonfile.json', obj, 'utf8', function(err) {
-    					if(err) return console.log(err);
-						console.log("The file was saved in the file!");
-						document.getElementById('myModal').style.display = "none";
-						toast(1);
-						displayNote();
-						var client = new twilio('ACe1c50abb0d28db08f7b6dd98dc7bd4a2', '286416c143cec740a6daf985a83078c8');
-						client.messages.create({
-							to: '0658549675',
-							from: '+33644602703',
-							body: 'Nouvelle note ajouté !'
-						  });
-					});
-				}
-			});
-		}
-	});
+const electron = require('electron');
 
-	const electron = require('electron');
-
-// Get the modal
-var modal = document.getElementById('myModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("menu2");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-
-// When the user clicks the button, open the modal
-btn.onclick = function() {
-    modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-	console.log(event);
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-// Get the <span> element that closes the modal
-var span2 = document.getElementsByClassName("close")[1];
-
-	// When the user clicks on <span> (x), close the modal
-		span2.onclick = function() {
-		document.getElementById('myModalRemove').style.display = "none";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == document.getElementById('myModalRemove')) {
-			document.getElementById('myModalRemove').style.display = "none";
-		}
-	}
-
-
-document.getElementById('menu4').addEventListener('click', function () { // Quit the App
-	ipc.send('quit');
-});
-
-document.getElementById('menu0').addEventListener('click', function () { // Reload App
-	ipc.send('reload');
-});
+// document.getElementById('menu4').addEventListener('click', function () { // Quit the App
+// 	ipc.send('quit');
+// });
+//
+// document.getElementById('menu0').addEventListener('click', function () { // Reload App
+// 	ipc.send('reload');
+// });
 
 function toast(i) { //Toggle Toast
 	var x = document.getElementById("snackbar"+i);
@@ -152,22 +75,17 @@ function loop(){
 }
 
 function displayNote(stop){
-	if (stop) return; // stop the refreshing of the notes.
-	var html = [];
-	 fs.readFile("myjsonfile.json", 'utf8', function (err, data){
-		if (err) displayNote(true); // Stop displaying if there is an error or if myjsonfile.json doesn't exist
-		var data = JSON.parse(data);
-		if(data.note.length == 0){
-			fs.unlink('./myjsonfile.json', (err) => {
-				if (err) throw err;
-			});
-		}
-		var count = Object.keys(data.note).length-1;
-		for(var i = 0; i <= count; i++){ // display note card
-			html += '<div id="note'+i+'" draggable="true" ondrag="dragstart(event,'+data.note[i].id+');" class="card cardG"><h3 id="titleNote'+i+'">'+ eval('data.note['+ i +'].title')+'</h3><audio id="audio'+i+'" hidden><source src="mp3/tts'+i+'.mp3" type="audio/mp3"/></audio><img id="speak" onclick="speak(\''+data.note[i].title.replace("'","20htpm")+'\',\''+data.note[i].message.replace("'","20htpm")+'\', '+i+');" class="iconImg2" src="img/speaker.PNG" alt="Ecoutez"><img id="modif" onclick="modif('+ i +');" class="iconImg" src="img/pen.PNG" alt="Modifiez"><span id="deleteNote" name="'+i+'" onclick="deleteNote('+i+', false);"class="close cross">&times;</span><textarea id="area'+i+'" class="areaModif" name="'+i+'" style="display:none;">'+ eval('data.note['+ i +'].message')+'</textarea><p id="messageNote'+i+'">'+ eval('data.note['+ i +'].message')+'</p></div>'; 
-		}
-		document.getElementById('note').innerHTML = html;
-	});
+	// $.ajax({
+	// 	url: 'http://51.68.85.139:3000/note/show/all',
+	// 	type: 'get',
+	// 	success: function(data) {
+	// 		for(i = 0; i < (data.lenght-1); i++){
+	// 			console.log(data[i].title)
+	// 		}
+	//
+	// 		$(".container").val(data)
+	// 	}
+	// });
 }
 
 function characteresCount(max){
@@ -206,130 +124,78 @@ function characteresCount(max){
 	}
 }
 
-function modif(i){ // Modify the note selected & save button appear
+// function dragstart(event, id){
+// 	fs.readFile("myjsonfile.json", 'utf8', function (err, data) {
+// 		if (err) return cosole.log(err);
+// 		var data = JSON.parse(data);
+// 		var count = Object.keys(data.note).length-1;
+// 		for(var i = 0; i <= count; i++){
+// 			if(data.note[i].id == id){
+// 				title = data.note[i].title;
+// 				message = data.note[i].message;
+// 			}
+// 		}
+// 	});
+// 	if (event.screenX == 0 && event.screenY == 0) { // if the user is leaving the window
+// 		id = id++;
+// 		if (fs.existsSync(userHome+'/Desktop/note'+id+'.txt') == false) { // Check if the file is not already saved on desktop, if not then save it
+// 			fs.appendFile(userHome+'/Desktop/note'+id+'.txt', title+'\r\n\r\n'+message, function (err) {
+// 				if (err) throw err;
+// 				return true;
+// 			});
+// 		}else{
+// 			ipc.send('information-dialog-selection'); // send a message to index.js to throw an error.
+// 		}
+// 	}
+// }
 
-	var textArea = document.getElementById("area"+i);
-	var noteArea = document.getElementById("messageNote"+i);
-	var saveDiv = document.getElementById("save");
-	var saveButton = document.getElementById('saveButton');
-	var amountNote = noteCount();
-	for (var a = 0; a < amountNote; a++) {
-		if (document.getElementById("area"+a).style.display == "block" && a != i) { // If teaxtarea visible and user clicks on an other note
-			toast(2);
-			return false;
-		}
-	}
+// function speak(title, message, id) { // TTS
+// 	new Audio('https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(title.replace("20htpm","'"))+'%20.'+encodeURIComponent(message).replace("20htpm", "'")+'&tl=fr&client=tw-ob').play();
+// }
 
-	if (textArea.style.display != "block") { // If TextArea not visible
-		noteArea.style.display = "none";
-		textArea.style.display = "block";
-		save.style.display = "block";
-		saveButton.setAttribute("name", ""+i+"");
-	}else{
-		noteArea.style.display = "block";
-		textArea.style.display = "none";
-		save.style.display = "none";
-		saveButton.setAttribute("name", "");
-	}
-	return i;
-} /* Fin modif() */
 
-document.getElementById('saveButton').addEventListener("click", function(){ // If save button is clicked then edit note selected
 
-	var id = document.getElementById("saveButton").name; // Note's Id
-	var text = document.getElementById('area'+id).value;
 
-	const filePath = './myjsonfile.json';
-
-	updateJsonFile(filePath, (data) => {
-		data.note[id].message = text; // change the message in the json file.
-		return data;
-	})
-	modif(id);
-	toast(3);
-	displayNote();
-	loop();
-});
-
-function deleteNote(id, bool){ // Delete the note[id]. If bool = true then the function will remove the note, otherwise nothing will happen
-	const filePath = './myjsonfile.json';
-	var button = document.getElementById('btnRemove');
-	button.innerHTML= '<button id="non" class="nonRemove" onclick="deleteNote('+id+', false)">Non</button><button id="oui" class="ouiRemove" onclick="deleteNote('+id+', true)">Oui</button>';
-
-	if(bool){
-        var read = fs.readFileSync(filePath);
-        var data = JSON.parse(read);
-        delete data.note[id];
-        var json = JSON.stringify(data, null, 4);
-			fs.writeFile('myjsonfile.json', json.replace('\n\n        null,', '').replace(',\n        null', '').replace('\n        null,', '').replace('\n        null', ''), 'utf8', function(err) {
-                if(err) return console.log(err);
-            });
-        displayNote();
-	}
-
-	// Get the modalRemove
-	var modalRemove = document.getElementById('myModalRemove');
-
-	if (modalRemove.style.display == "none") {
-		// When the user clicks the button, open the modal
-		modalRemove.style.display = "block";
-	}else{
-		modalRemove.style.display = "none";
-    }
-} /* Fin deleteNote() */
-
-function dragstart(event, id){
-	fs.readFile("myjsonfile.json", 'utf8', function (err, data) {
-		if (err) return cosole.log(err);
-		var data = JSON.parse(data);
-		var count = Object.keys(data.note).length-1;
-		for(var i = 0; i <= count; i++){
-			if(data.note[i].id == id){
-				title = data.note[i].title;
-				message = data.note[i].message;
-			}
+ipcMain.on('new_note', function(){ // Reload App
+	$.ajax({
+		url: 'http://51.68.85.139:3000/note/create',
+		data: 'id='+store.get('id'),
+		type: 'post',
+		success: function(data) {
+			// ipc.send('show_notes');
+			// ipc.send('verif_session');
 		}
 	});
-	if (event.screenX == 0 && event.screenY == 0) { // if the user is leaving the window
-		id = id++;
-		if (fs.existsSync(userHome+'/Desktop/note'+id+'.txt') == false) { // Check if the file is not already saved on desktop, if not then save it
-			fs.appendFile(userHome+'/Desktop/note'+id+'.txt', title+'\r\n\r\n'+message, function (err) {
-				if (err) throw err;
-				return true;
-			});
-		}else{
-			ipc.send('information-dialog-selection'); // send a message to index.js to throw an error.
-		}
-	} 
+});
+
+$('#new_note').click(function(){
+	modal.emit('increment').then(() => {
+	 console.log('The increment event was sent');
+	});
+})
+
+if (process.platform == 'darwin') {
+	mainMenuTemplate.unshift({});
 }
 
-function speak(title, message, id) { // TTS
-	new Audio('https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(title.replace("20htpm","'"))+'%20.'+encodeURIComponent(message).replace("20htpm", "'")+'&tl=fr&client=tw-ob').play();
-	/*googleTTS(title, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-	.then(function (url) {
-	console.log(url); // https://translate.google.com/translate_tts?...
-	const options = {
-		url: `https://translate.google.com/translate_tts?ie=UTF-8&q=`+encodeURIComponent(title.replace("20htpm","'"))+`%20.`+encodeURIComponent(message).replace("20htpm", "'")+`&tl=fr&client=tw-ob`,
-		headers: {
-			'Referer': 'http://translate.google.com/',
-			'User-Agent': 'stagefright/1.2 (Linux;Android 5.0)'
+if (process.env.NODE_ENV !== 'production') {
+	mainMenuTemplate.push({
+		label: 'Developper Tools',
+		submenu:[
+		{
+			label: 'Toggle DevTools',
+			accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+			click(item, focusedWindow){
+				focusedWindow.toggleDevTools();
+			}
+		},
+		{
+			role: 'reload'
 		}
-	}
-	
-	request(options).pipe(fs.createWriteStream('mp3/tts'+id+'.mp3'));
-
-	
-		var audio = document.getElementById('audio'+id+''); 	
-		var read = fs.readFileSync(__dirname+'/mp3/tts'+id+'.mp3');
-		audio.play();
-	
-	
-	
-	})
-	.catch(function (err) {
-	console.error(err.stack);
-	});*/
+		]
+	});
 }
+
 
 document.getElementById('menu1').addEventListener('click', function () { // Click on search menu
 	var search = document.getElementById('recherche');

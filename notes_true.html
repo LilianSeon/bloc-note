@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr" id="html">
+<head>
+	<title>Bloc - Note</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+	<script src="https://kit.fontawesome.com/900c5cbcb4.js"></script>
+	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+<body>
+	<div style="display:flex">
+		<div style="width:20%; background-color:white; ">
+			<ul class="demo-list-item mdl-list">
+			  <li class="mdl-list__item">
+			    <span class="mdl-list__item-primary-content">
+			      <a href="notes.html" style="color:blue" class="menu_item">Notes</a>
+			    </span>
+			  </li>
+			  <li class="mdl-list__item">
+			    <span class="mdl-list__item-primary-content">
+			      <a href="groups.html" class="menu_item">Groupes</a>
+			    </span>
+			  </li>
+			  <li class="mdl-list__item">
+			    <span class="mdl-list__item-primary-content">
+			      <a href="user.html" class="menu_item">User</a>
+			    </span>
+			  </li>
+			  <li class="mdl-list__item">
+			    <span class="mdl-list__item-primary-content">
+						<button id = "disconnection" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+ 						 Déconnexion
+ 					 </button>
+			    </span>
+			  </li>
+			</ul>
+		</div>
+		<div style="width:80%; padding-left:10px">
+			<div style="width:100%">
+				<button id="show-dialog" type="button" class="mdl-button">Créer une nouvelle note</button>
+			</div>
+			<div id="notes">
+			</div>
+		</div>
+	</div>
+	<dialog class="mdl-dialog" id="dialog_create_note">
+		<h4 class="mdl-dialog__title">Création d'une note</h4>
+		<div class="mdl-dialog__content">
+		  <div class="mdl-textfield mdl-js-textfield">
+		    <input class="mdl-textfield__input" type="text" id="title">
+		    <label class="mdl-textfield__label" for="title">Titre</label>
+		  </div>
+		  <div class="mdl-textfield mdl-js-textfield">
+		    <textarea class="mdl-textfield__input" type="text" rows= "5" id="note"></textarea>
+		    <label class="mdl-textfield__label" for="note">Note</label>
+		  </div>
+			<div class="mdl-textfield mdl-js-textfield getmdl-select">
+				<input type="text" value="" class="mdl-textfield__input" id="sample1" readonly>
+				<input type="hidden" value="" name="sample1">
+				<label for="sample1" class="mdl-textfield__label">Group</label>
+				<ul id="groups_ul" for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+				</ul>
+			</div>
+		</div>
+		<div class="mdl-dialog__actions">
+			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="save_note">Sauvegarder</button>
+			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent close">Close</button>
+		</div>
+	</dialog>
+	<script>
+		var dialog_create = document.querySelector('#dialog_create_note');
+		var showDialogButton = document.querySelector('#show-dialog');
+		if (! dialog_create.showModal) {
+			// dialogPolyfill.registerDialog(dialog);
+		}
+		showDialogButton.addEventListener('click', function() {
+			dialog_create.showModal();
+		});
+		dialog_create.querySelector('.close').addEventListener('click', function() {
+			dialog_create.close();
+		});
+	</script>
+<script type="text/javascript" src="js/mainWindow.js"></script>
+<script type="text/javascript">
+</script>
+</body>
+</html>
+<script>
+$('#disconnection').click(function(){
+	ipc.send('destroy_session');
+	ipc.send('verif_session');
+})
+
+function show_notes(){
+	$.ajax({
+		url: 'http://51.68.85.139:3000/note/show',
+		data: 'user_id='+ipc.sendSync('get_id'),
+		type: 'get',
+		success: function(data) {
+			for(i = 0; i < data.length; i++){
+				note = '<div class="demo-card-wide mdl-card mdl-shadow--2dp"><div class="mdl-card__title"><h2 class="mdl-card__title-text">'+data[i]['title']+'</h2></div><div class="mdl-card__supporting-text">'+data[i]['note']+'</div><div class="mdl-card__actions mdl-card--border"><a  id=edit'+data[i]['id']+' class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Modifier</a></div></div>'
+				edit_modal = '<dialog class="mdl-dialog" id="dialog_edit'+data[i]['id']+'><h4 class="mdl-dialog__title">Modification d\'une note</h4><div class="mdl-dialog__content"><div class="mdl-textfield mdl-js-textfield"><input class="mdl-textfield__input" type="text" id="title" value='+data[i]['title']+'><label class="mdl-textfield__label" for="title">Titre</label></div><div class="mdl-textfield mdl-js-textfield"><textarea class="mdl-textfield__input" type="text" rows= "5" id="note" value='+data[i]['note']+'></textarea><label class="mdl-textfield__label" for="note">Note</label></div></div><div class="mdl-dialog__actions"><button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="save_note">Sauvegarder</button><button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent close">Close</button></div></dialog>'
+				edit_modal_script = document.createElement("script");
+				edit_modal_script.innerHTML = 'var dialog'+data[i]['id']+' = $("#dialog_edit'+data[i]['id']+'");var showDialogButton = $("#edit'+data[i]['id']+'");if (! dialog'+data[i]['id']+'.showModal) {dialogPolyfill.registerDialog(dialog'+data[i]['id']+');}showDialogButton.addEventListener("click", function() {dialog'+data[i]['id']+'.showModal();});dialog'+data[i]['id']+'.querySelector(".close").addEventListener("click", function() {dialog'+data[i]['id']+'.close();})'
+				$('#notes').append(note)
+				//$('#notes').append(edit_modal)
+				//$('#notes').append(edit_modal_script)
+			}
+		}
+	});
+}
+
+function show_groups(){
+	$.ajax({
+		url: 'http://51.68.85.139:3000/group/show/',
+		data: 'user_id='+ipc.sendSync('get_id'),
+		type: 'get',
+		success: function(data){
+			for(i = 0; i < data.length; i++){
+				group_li = '<li class="mdl-menu__item" data-val="'+data[i]["id"]+'">'+data[i]["title"]+'</li>'
+				$('#groups_ul').append(group_li)
+			}
+		}
+	});
+}
+
+
+function edit_note(title, note, id){
+	$.ajax({
+		url: 'http://51.68.85.139:3000/note/edit/'+id,
+		data: 'user_id='+ipc.sendSync('get_id')+'&title='+ title +'&note='+ note,
+		type: 'post',
+		success: function(data) {
+			 $('#notes').html('')
+			 show_notes()
+			 dialog.close();
+			// ipc.send('show_notes');
+			// ipc.send('verif_session');
+		}
+	});
+}
+
+$(document).ready(function(){
+	ipc.send('verif_session');
+	show_notes()
+	show_groups()
+})
+
+// $('#save_note').click(function(){
+// 	ipc.send('verif_session');
+// 	$.ajax({
+// 		url: 'http://51.68.85.139:3000/note/create',
+// 		data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&note='+ $('#note').val(),
+// 		type: 'post',
+// 		success: function(data) {
+// 			 $('#notes').html('')
+// 			 show_notes()
+// 			 dialog_create.close();
+// 			// ipc.send('show_notes');
+// 			// ipc.send('verif_session');
+// 		}
+// 	});
+// })
+</script>
