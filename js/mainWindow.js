@@ -122,7 +122,10 @@ function dragstart(event, id){
 	} 
 }
 
-function speak(title, message, id) { // TTS
+function speak(id) { // TTS
+	var title, message;
+	title = document.getElementById('titleNote'+id).innerText;
+	message = document.getElementById('messageNote'+id).innerText;
 	new Audio('https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(title.replace("20htpm","'"))+'%20.'+encodeURIComponent(message).replace("20htpm", "'")+'&tl=fr&client=tw-ob').play();
 }
 
