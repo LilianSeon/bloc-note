@@ -18,7 +18,7 @@ function noteCount(){ // Count the amount of note saved
 	return cb.length;
 }
 
-	document.getElementById('ajoutez').addEventListener('click',function(){ // When the user fill a new note.
+	document.getElementById('save').addEventListener('click',function(){ // When the user fill a new note.
 		title = document.getElementById('title').value;
 		message = document.getElementById('message').value;
 
@@ -65,17 +65,17 @@ function characteresCount(max){
 	if (circle2.style.strokeDashoffset < 51 && circle2.style.strokeDashoffset < 10) { // Blue color
 		circle2.classList.remove('RadialCounter--warn', 'RadialCounter--danger');
 		circle2.classList.add('RadialCounter--safe');
-		document.getElementById('ajoutez').style.cursor = "pointer";
+		document.getElementById('save').style.cursor = "pointer";
 	}
 	if (circle2.style.strokeDashoffset < 9 && circle2.style.strokeDashoffset > 0 ) { // Orange color
 		circle2.classList.remove('RadialCounter--safe', 'RadialCounter--danger', 'RadialCounter--pulse');
 		circle2.classList.add('RadialCounter--warn', 'RadialCounter--pulse');
-		document.getElementById('ajoutez').style.cursor = "pointer";
+		document.getElementById('save').style.cursor = "pointer";
 	}
 	if (circle2.style.strokeDashoffset == 0) { // Red color
 		circle2.classList.remove('RadialCounter--safe', 'RadialCounter--warn', 'RadialCounter--pulse');
 		circle2.classList.add('RadialCounter--danger', 'RadialCounter--pulse');
-		document.getElementById('ajoutez').style.cursor = "not-allowed";
+		document.getElementById('save').style.cursor = "not-allowed";
 	}
 	if (max-count < 0) { // display the extra characteres
 		document.getElementById('over').style.display = "inline";
@@ -87,10 +87,19 @@ function characteresCount(max){
 	}
 }
 
-function modif(i){ // Modify the note selected
-
-	return i;
+function modif(id){ // Modify the note selected
+	var title = document.getElementById('titleNote'+id).innerText;
+	var message = document.getElementById('messageNote'+id).innerText;
+	var elems = document.getElementById('modal1');
+    M.Modal.init(elems).open();
+    document.getElementById('title').value = title;
+    document.getElementById('message').value = message;
 } /* Fin modif() */
+
+document.getElementById('ajoutez').addEventListener('click', function () {
+	document.getElementById('title').value = "";
+	document.getElementById('message').value = "";
+});
 
 
 function deleteNote(id, bool){ // Delete the note[id]. If bool = true then the function will remove the note, otherwise nothing will happen
