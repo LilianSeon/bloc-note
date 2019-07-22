@@ -21,13 +21,13 @@
                 <div class="row">
                     <div class="col s12 m12 offset-m1">
                         <div class="input-field col m5 offset-m1 recherche">
-                            <input id="recherche" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
+                            <input id="search" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
                         </div>
                         <div class="col m4">
-                            <div class="flow-text black-text prenom center-align">Vasyuk Mikhail</div>
+                          <a href="user.html" class="flow-text black-text prenom center-align">Vasyuk Mikhail</a>
                         </div>
                         <div class="col m1">
-                           <a  id="disconnection" class="waves-effect waves-light btn blue z-depth-2">Déconnexion</a>
+                           <a id="disconnection" class="waves-effect waves-light btn blue z-depth-2">Déconnexion</a>
                        </div>
                         <div class="col m1">
                             <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text center-align">menu</i></a>
@@ -54,13 +54,13 @@
         <!-- First row -->
         <div class="row" style="margin-top:20px;">
             <div class="col m4 offset-m2" style="margin-top:15px;">
-                <a id="ajoutez" href="#modal1" class="waves-effect waves-light btn blue z-depth-2 modal-trigger"><i class="material-icons left">add</i>Ajoutez un note</a>
+                <a id="ajoutez" href="#modal1" class="waves-effect waves-light btn blue z-depth-2 modal-trigger"><i class="material-icons left">add</i>Ajoutez une note</a>
             </div>
-            <div class="input-field col m3 offset-m3">
+            <!-- <div class="input-field col m3 offset-m3">
                 <select id='groups_select'>
                 </select>
                 <label>Affichage de</label>
-            </div>
+            </div> -->
         </div>
         <!-- End First row-->
         <div class="row" id="notes" style="margin-left:150px">
@@ -75,6 +75,7 @@
                 </h4>
                 </div>
                 <form>
+                    <a style="display:none" class="id_note"></a>
                     <div class="row">
                         <div class="input-field col s6 m6">
                             <input id="title" type="text" class="validate">
@@ -87,12 +88,12 @@
                             <label for="message">Message...</label>
                         </div>
                     </div>
-                    <div class="input-field col s11 m11">
-                        <select id='groups_select_modal'>
-                        </select>
-                        <label>Groupe</label>
-                    </div>
                 </form>
+                <div class="col s11 m11">
+                    <h5>Choisir groupe</h5>
+                    <div id='groups_select_modal'>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer row">
                 <div id="over" class="col m1"></div>
@@ -104,7 +105,8 @@
 						</svg>
 					</div>
 					<div id="errorCharacteres" class="left" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
-                  <a id="save_note" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
+          <a id="save_note" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
+          <a style="display:none" id="edit_note" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Modifier</a>
           </div>
       </div>
     </div>
@@ -113,13 +115,17 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script type="text/javascript" src="js/mainWindow.js"></script>
     <script>
+        group_id = null
+
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.getElementById('groups_select');
             var instances = M.FormSelect.init(elems);
-            var groups_select_modal = document.getElementById('groups_select_modal');
-            var instances = M.FormSelect.init(groups_select_modal);
+            // var groups_select_modal = document.getElementById('groups_select_modal');
+            // var instances = M.FormSelect.init(groups_select_modal);
             var elems2 = document.querySelectorAll('.sidenav');
             var instances2 = M.Sidenav.init(elems2);
+            $('#edit_note').css('display','none')
+            $('#save_note').css('display','inline-block')
             var elems3 = document.getElementById('modal1');
             var instances3 = M.Modal.init(elems3);
             document.getElementById('closeNewNote').onclick = function() {
@@ -134,26 +140,31 @@
 
           function show_notes(){
           	$.ajax({
-          		url: 'http://51.68.85.139:3000/note/show',
+          		url: 'http://localhost:3000/note/show',
           		data: 'user_id='+ipc.sendSync('get_id'),
           		type: 'get',
           		success: function(data) {
           			for(i = 0; i < data.length; i++){
-                  note = '<div draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m4 "><div class="card white z-depth-3"><div class="card-content black-text"><span class="right iconNote" onclick="deleteNote('+ data[i]['id'] +');"><i class="material-icons black-text center-align">close</i></span><a href="#modal'+data[i]['id'] +'" class="right iconNote";"><i class="material-icons black-text center-align">border_color</i></a><span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span><span class="card-title titre">'+data[i]['title']+'</span><p>'+data[i]['note']+'</p></div><div class="card-action"><small>De : Vasyuk Mikhail</small><small class="right">Le : 20/06/2019</small></div></div></div></div>'
-          				edit_modal = '<div id="modal'+data[i]['id']+'" class="modal"><div class="modal-content"><div class="row"><h4 class="center-align">Modifier Note<i id="closeNewNote" class="material-icons black-text center-align right pointer">close</i></h4></div><form><div class="row"><div class="input-field col s6 m6"><input id="title" type="text" value="'+data[i]['title'] +'" class="validate"><label for="title">Titre</label></div></div><div class="row"><div class="input-field col s11 m11"><textarea id="message" class="materialize-textarea" onkeydown="characteresCount(100)">'+data[i]['note']+'</textarea><label for="message">Message...</label></div></div><div class="input-field col s11 m11"><select id="groups_select_modal"></select><label>Groupe</label></div></form></div><div class="modal-footer row"><div id="over" class="col m1"></div><div class="restriction col m11"><div class="circle"><svg height="20" width="20"><circle id="circle1" class="RadialCounter-progressUnderlay" cx="50%" cy="50%" r="8" fill="none" stroke-width="1"></circle><circle id="circle2" class="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r="8" fill="none" stroke-width="2" style="stroke-dashoffset: 50;stroke-dasharray: 50.2655;"></circle></svg></div><div id="errorCharacteres" class="left" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div><a id="edit_note" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a></div></div></div>'
-          				//edit_modal_script = document.createElement("script");
-          				//edit_modal_script.innerHTML = '$("body").on("click", "#modal'+data[i]['id']+'", function() {alert("Salut")});'
+                  note = '<div id="note" draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m4 "><div class="card white z-depth-3"><div class="card-content black-text"><a class="right iconNote" onclick="modif_note('+data[i]['id'] +')"><i class="material-icons black-text center-align">border_color</i></a><span class="right iconNote" onclick="speak('+data[i]['id'] +')"><i class="material-icons black-text center-align">volume_up</i></span><span id="titleNote'+data[i]['id']+'" class="card-title titre">'+data[i]['title']+'</span><p id="messageNote'+data[i]['id']+'">'+data[i]['note']+'</p></div></div></div></div>'
           				$('#notes').append(note)
-          				//$('#notes').append(edit_modal)
-          				//$('#notes').append(edit_modal_script)
           			}
           		}
           	});
           }
 
+          function modif_note(id){
+            $('#edit_note').css('display','inline-block')
+            $('#save_note').css('display','none')
+            var elems = document.getElementById('modal1');
+            M.Modal.init(elems).open();
+            $('#title').val($('#titleNote'+id).html())
+            $('#message').val($('#messageNote'+id).html())
+            $('.id_note').attr("id", id)
+          }
+
           function deleteNote(id){
             $.ajax({
-              url: 'http://51.68.85.139:3000/note/delete/' + id,
+              url: 'http://localhost:3000/note/delete/' + id,
               data: 'user_id='+ipc.sendSync('get_id'),
               type: 'delete',
               success: function(data){
@@ -164,26 +175,32 @@
           }
 
 
+          function selectGroup(id_group){
+            group_id = id_group
+          }
+
           function show_groups(){
           	$.ajax({
-          		url: 'http://51.68.85.139:3000/group/show/',
+          		url: 'http://localhost:3000/group/show/',
           		data: 'user_id='+ipc.sendSync('get_id'),
           		type: 'get',
           		success: function(data){
           			for(i = 0; i < data.length; i++){
-                  group_option = '<option value="'+data[i]["id"]+'">'+data[i]["title"]+'</option>'
-          				$('#groups_select_modal').append(group_option)
-                  $('#groups_select').append(group_option)
+                  group_option = '<a id='+data[i]["id"]+' style="display:block;color:black" onclick=selectGroup('+data[i]["id"]+')>'+data[i]["title"]+'</a>'
+                  // group_option = '<option value="'+data[i]["id"]+'">'+data[i]["title"]+'</option>'
+          				//$('#groups_select_modal').append(group_option)
+                  $('#groups_select_modal').append(group_option)
           			}
           		}
           	});
           }
 
 
-          function edit_note(title, note, id){
-          	$.ajax({
-          		url: 'http://51.68.85.139:3000/note/edit/'+id,
-          		data: 'user_id='+ipc.sendSync('get_id')+'&title='+ title +'&message='+ note,
+          $('#edit_note').click(function(){
+            ipc.send('verif_session');
+            $.ajax({
+          		url: 'http://localhost:3000/note/edit/'+ $('.id_note').attr('id'),
+          		data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&message='+ $('#message').val() + '&group_id='+group_id,
           		type: 'post',
           		success: function(data) {
           			 $('#notes').html('')
@@ -193,7 +210,7 @@
           			// ipc.send('verif_session');
           		}
           	});
-          }
+          })
 
           $(document).ready(function(){
           	ipc.send('verif_session');
@@ -202,20 +219,17 @@
           })
 
           $('#save_note').click(function(){
-            console.log("ONE")
             ipc.send('verif_session');
-          	$.ajax({
-          		url: 'http://51.68.85.139:3000/note/create',
-          		data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&note='+ $('#message').val(),
-          		type: 'post',
-          		success: function(data) {
-          			 $('#notes').html('')
-          			 show_notes()
-          			 dialog_create.close();
-          			// ipc.send('show_notes');
-          			// ipc.send('verif_session');
-          		}
-          	});
+            $.ajax({
+              url: 'http://localhost:3000/note/create',
+              data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&note='+ $('#message').val() + '&group_id='+group_id,
+              type: 'post',
+              success: function(data) {
+                 $('#notes').html('')
+                 show_notes()
+                 dialog_create.close();
+              }
+            });
           })
 
     </script>

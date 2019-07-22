@@ -93,7 +93,7 @@
 
 	function show_groups(){
 		$.ajax({
-			url: 'http://51.68.85.139:3000/group/show',
+			url: 'http://localhost:3000/group/show',
 			data: 'user_id='+ipc.sendSync('get_id'),
 			type: 'get',
 			success: function(data) {
@@ -108,7 +108,7 @@
 	$('#save_group').click(function(){
 		ipc.send('verif_session');
 		$.ajax({
-			url: 'http://51.68.85.139:3000/group/create',
+			url: 'http://localhost:3000/group/create',
 			data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&description='+ $('#description').val(),
 			type: 'post',
 			success: function(data) {

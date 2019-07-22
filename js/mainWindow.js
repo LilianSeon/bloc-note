@@ -22,7 +22,7 @@ function noteCount(){ // Count the amount of note saved
 
 	$('#ajoutez').click(function(){
 		$.ajax({
-			url: 'http://51.68.85.139:3000/note/create',
+			url: 'http://localhost:3000/note/create',
 			data: 'title='+ $('#title').val() +'&note='+ $('#message').val(),
 			type: 'post',
 			success: function(data) {
@@ -76,7 +76,7 @@ function loop(){
 
 function displayNote(stop){
 	// $.ajax({
-	// 	url: 'http://51.68.85.139:3000/note/show/all',
+	// 	url: 'http://localhost:3000/note/show/all',
 	// 	type: 'get',
 	// 	success: function(data) {
 	// 		for(i = 0; i < (data.lenght-1); i++){
@@ -149,16 +149,19 @@ function characteresCount(max){
 // 	}
 // }
 
-// function speak(title, message, id) { // TTS
-// 	new Audio('https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(title.replace("20htpm","'"))+'%20.'+encodeURIComponent(message).replace("20htpm", "'")+'&tl=fr&client=tw-ob').play();
-// }
+function speak(id) { // TTS
+	var title, message;
+	title = document.getElementById('titleNote'+id).innerText;
+	message = document.getElementById('messageNote'+id).innerText;
+	new Audio('https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(title.replace("20htpm","'"))+'%20.'+encodeURIComponent(message).replace("20htpm", "'")+'&tl=fr&client=tw-ob').play();
+}
 
 
 
 
 ipcMain.on('new_note', function(){ // Reload App
 	$.ajax({
-		url: 'http://51.68.85.139:3000/note/create',
+		url: 'http://localhost:3000/note/create',
 		data: 'id='+store.get('id'),
 		type: 'post',
 		success: function(data) {
@@ -211,7 +214,7 @@ function search(){ //Display the notes that the user is looking for
     input = document.getElementById("search");
     filter = input.value.toUpperCase();
     divNote = document.getElementById("note");
-    note = divNote.getElementsByTagName("div");
+    note = $('.card')
     for (i = 0; i < note.length; i++) {
         a = note[i];
         txtValue = a.textContent || a.innerText;

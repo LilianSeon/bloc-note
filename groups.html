@@ -24,7 +24,7 @@
                             <input id="recherche" type="text" placeholder="Recherche" onkeyup="search()" class="valide z-depth-3">
                         </div>
                         <div class="col m3">
-                            <div class="flow-text black-text prenom center-align">Vasyuk Mikhail</div>
+                            <a href="user.html" class="flow-text black-text prenom center-align">Vasyuk Mikhail</a>
                         </div>
                         <div class="col m1">
                            <a id="disconnection" class="waves-effect waves-light btn blue z-depth-2">Déconnexion</a>
@@ -58,46 +58,54 @@
           </div>
       </div>
       <div class="row" id="groups" style="margin-left:150px">
-
+        <div draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m4 ">
+          <div class="card white z-depth-3">
+            <div class="card-content black-text">
+              <span class="card-title titre">Mes notes</span><p>Toutes les notes qui sont assoiciées à votre profil</p>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
       <div id="modal1" class="modal">
           <div class="modal-content">
               <div class="row">
-              <h4 class="center-align">Nouvelle group
-                  <i id="closeNewNote" class="material-icons black-text center-align right pointer">close</i>
-              </h4>
+                <h4 class="center-align">Nouveau groupe
+                    <i id="closeNewNote" class="material-icons black-text center-align right pointer">close</i>
+                </h4>
               </div>
               <form>
-                  <div class="row">
-                      <div class="input-field col s6 m6">
-                          <input id="title" type="text" class="validate">
-                          <label for="title">Titre</label>
-                      </div>
+                <div class="row">
+                  <div class="input-field col s6 m6">
+                    <input id="title" type="text" class="validate">
+                    <label for="title">Titre</label>
                   </div>
-                  <div class="row">
-                      <div class="input-field col s11 m11">
-                          <textarea id="message" class="materialize-textarea" onkeydown="characteresCount(100)"></textarea>
-                          <label for="message">Descréption...</label>
-                      </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s11 m11">
+                    <textarea id="message" class="materialize-textarea" onkeydown="characteresCount(100)"></textarea>
+                    <label for="message">Déscription...</label>
                   </div>
+                </div>
               </form>
+              <div class="row">
+                <div class="col s6 m6">
+                  <h5>Membres</h5>
+                  <div class="membres_div">
+                    Pas de membre pour le moment
+                  </div>
+                </div>
+                <div class="col s6 m6">
+                  <h5>Ajouter un membre</h5>
+                  <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="email" id="email_add_membre">
+                  </div>
+                  <div class="finded_emails">
+                  </div>
+                </div>
+              </div>
+              <a id="save_group" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
           </div>
-          <div class="modal-footer row">
-              <div id="over" class="col m1"></div>
-      <div class="restriction col m11">
-        <div class="circle">
-          <svg height="20" width="20">
-            <circle id="circle1" class="RadialCounter-progressUnderlay" cx="50%" cy="50%" r="8" fill="none" stroke-width="1"></circle>
-            <circle id="circle2" class="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r="8" fill="none" stroke-width="2" style="stroke-dashoffset: 50;stroke-dasharray: 50.2655;"></circle>
-          </svg>
-        </div>
-        <div id="errorCharacteres" class="left" style="display:none;margin-left:15px;">La lecture audio ne sera pas possible.</div>
-                <a id="save_group" class="modal-close waves-effect waves-blue blue btn"><i class="material-icons right">check</i>Enregistrer</a>
-        </div>
-    </div>
-      <!-- End modal add note -->
-
-
       </div>
     </div>
 
@@ -105,6 +113,49 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script type="text/javascript" src="js/mainWindow.js"></script>
     <script type="text/javascript">
+    emails = []
+
+
+    $('#email_add_membre').keyup(function(){
+      if (($(this).val().length) > 3 ){
+        $.ajax({
+          url: "http://localhost:3000/find_user",
+          data: 'email=' +  $(this).val(),
+          type: 'get',
+          success: function(data) {
+            if (data && data.length){
+              $(".finded_emails").css('display','block')
+              for(i = 0; i < data.length; i++){
+                email = '<a style="cursor:pointer" onclick="add_user_to_membre(\''+data[i]+'\')">'+data[i]+'</a>'
+                $(".finded_emails").html(email)
+              }
+            }else{
+              $(".finded_emails").css('display','none')
+            }
+          }
+        });
+      }else{
+          $(".finded_emails").css('display','none')
+      }
+    });
+
+    function add_user_to_membre(email){
+      if (emails.length == 0){
+        emails.push(email)
+        $('.membres_div').html('<a style="display:block;color:black">'+email+'</a>')
+      }else{
+        emails.forEach(function(item, index, array) {
+          if(item == email){
+            alert("L'utilisateur est déjà ajouté")
+          }else{
+            emails.push(email)
+            $('.membres_div').append('<a style="display:block;color:black">'+email+'</a>')
+          }
+        });
+      }
+        $(".finded_emails").css('display','none')
+        $("#email_add_membre").val('')
+    }
 
       document.addEventListener('DOMContentLoaded', function() {
           var elems = document.querySelectorAll('select');
@@ -128,15 +179,27 @@
           ipc.send('verif_session');
         })
 
+        function deleteNote(note_id){
+          $.ajax({
+            url: 'http://localhost:3000/group/delete/'+note_id,
+            type: 'delete',
+            success: function(data) {
+              $('#groups').html('')
+              show_groups()
+            }
+          });
+        }
+
         function show_groups(){
       		$.ajax({
-      			url: 'http://51.68.85.139:3000/group/show',
+      			url: 'http://localhost:3000/group/show',
       			data: 'user_id='+ipc.sendSync('get_id'),
       			type: 'get',
       			success: function(data) {
       				for(i = 0; i < data.length; i++){
-                groupe='<div draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m4 "><div class="card white z-depth-3"><div class="card-content black-text"><span class="right iconNote" onclick="deleteNote(noteId, false);"><i class="material-icons black-text center-align">close</i></span><span class="right iconNote" onclick="modif(noteId);"><i class="material-icons black-text center-align">border_color</i></span><span class="right iconNote" onclick="speak(title, message, id)"><i class="material-icons black-text center-align">volume_up</i></span><span class="card-title titre">'+data[i]['title']+'</span><p>'+data[i]['description']+'</p></div><div class="card-action"><small>De : Vasyuk Mikhail</small><small class="right">Le : 20/06/2019</small></div></div></div></div>'
+                groupe='<div draggable="true" ondrag="dragstart(event,noteId);" class="col s12 m4 "><div class="card white z-depth-3"><div class="card-content black-text"><span class="card-title titre">'+data[i]['title']+'</span><p>'+data[i]['description']+'</p></div></div></div></div>'
                 $('#groups').append(groupe)
+                //<span class="right iconNote" onclick="deleteNote('+data[i]['id']+');"><i class="material-icons black-text center-align">close</i></span>
       				}
       			}
       		});
@@ -145,13 +208,13 @@
       	$('#save_group').click(function(){
       		ipc.send('verif_session');
       		$.ajax({
-      			url: 'http://51.68.85.139:3000/group/create',
-      			data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&description='+ $('#message').val(),
+      			url: 'http://localhost:3000/group/create',
+      			data: 'user_id='+ipc.sendSync('get_id')+'&title='+ $('#title').val() +'&description='+ $('#message').val()+'&email='+emails,
       			type: 'post',
       			success: function(data) {
       				 $('#groups').html('')
       				 show_groups()
-      				 dialog_create.close();
+      				 // dialog_create.close();
       				// ipc.send('show_notes');
       				// ipc.send('verif_session');
       			}

@@ -24,11 +24,11 @@ const ipc = require('electron').ipcRenderer;
            <form>
                <div class="login-content input-field col s12">
                    <input id="email" type="email" class="validate">
-                   <label for="email">Email</label>
+                   <label class="active" for="email">Email</label>
                </div>
                <div class="login-content input-field col s12">
                    <input id="password" type="password" class="validate">
-                   <label for="password">Password</label>
+                   <label class="active" for="password">Password</label>
                </div>
                <a class="waves-effect waves-light btn-small" id="send">Connexion</a>
                <!-- <div class="login-inscription">
@@ -40,7 +40,7 @@ const ipc = require('electron').ipcRenderer;
            </a> -->
        </div>
    </div>
-    <!-- <form action="http://51.68.85.139:3000/session/create" method="post"> -->
+    <!-- <form action="http://localhost:3000/session/create" method="post"> -->
       <!-- Email:<br>
       <input id="email" name="email">
       <br>
@@ -55,7 +55,7 @@ const ipc = require('electron').ipcRenderer;
 $('#send').click(function(){
   console.log("before")
   $.ajax({
-    url: 'http://51.68.85.139:3000/session/create',
+    url: 'http://localhost:3000/session/create',
     data: 'email='+ $('#email').val() +'&password='+ $('#password').val(),
     type: 'post',
     success: function(data) {
