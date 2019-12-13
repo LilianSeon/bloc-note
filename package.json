@@ -29,7 +29,7 @@
     "i": "^0.3.6",
     "node-mp3-player": "^1.0.3",
     "node-mpv": "^1.4.3",
-    "npm": "^6.6.0",
+    "npm": "^6.13.4",
     "request": "^2.88.0",
     "twilio": "^3.27.1",
     "update-json-file": "^1.1.1",
